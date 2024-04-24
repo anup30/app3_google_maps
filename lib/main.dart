@@ -42,8 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(title: const Text('google maps app'),),
       body: GoogleMap(
         mapType: MapType.normal, // .satellite .hybrid .normal
-        zoomControlsEnabled: true,
-        zoomGesturesEnabled: true,
+        zoomControlsEnabled: true, // + - zoom in/out buttons
+        zoomGesturesEnabled: true, //on tap zoom in
         myLocationEnabled: true,
         myLocationButtonEnabled: true,
         compassEnabled: true,
@@ -54,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         initialCameraPosition: const CameraPosition(
           target: LatLng(23.742144667472623, 90.38969244807959), // Latitude Longitude
-          zoom: 16, // the more zoom, the closer to target location
-          bearing: 5, // in degree, A bearing of 0.0, the default, means the camera points north.
+          zoom: 15, // the more zoom, the closer to target location, 16-17 more commonly used.
+          bearing: 5, // rotate clockwise in degree, A bearing of 0.0, the default, means the camera points north.
           tilt: 0,
         ),
         onTap: (LatLng latLng) {
@@ -91,21 +91,22 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         },
         circles: {
+          //class 2, 42:30
           Circle(
-              circleId: const CircleId('my-new-restaurant'),
+              circleId: const CircleId('my-new-circle-1'),
               center: const LatLng(23.742443588311794, 90.3894929587841),
               radius: 50,
               strokeColor: Colors.orange,
               strokeWidth: 3,
-              fillColor: Colors.orange.withOpacity(0.15)
+              fillColor: Colors.yellow.withOpacity(0.1)
           ),
           Circle(
-              circleId: const CircleId('my-new-restaurant-for-programm'),
+              circleId: const CircleId('my-new-circle-2'),
               center: const LatLng(23.74122027959254, 90.38924183696508),
               radius: 50,
               strokeColor: Colors.blue,
               strokeWidth: 3,
-              fillColor: Colors.lightGreen.withOpacity(0.15),
+              fillColor: Colors.lightGreen.withOpacity(0.1),
               onTap: () {
                 print('Tapped on circle');
               },
@@ -114,30 +115,33 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         polylines: {
           const Polyline(
-              polylineId: PolylineId('ploy-one'),
-              color: Colors.blueAccent,
-              width: 5,
+              polylineId: PolylineId('poly-one'),
+              color: Colors.green,
+              width: 3,
               points: [
                 LatLng(23.740341307078115, 90.38882710039616),
                 LatLng(23.740324734215356, 90.39145734161139),
                 LatLng(23.742737598077895, 90.39118140935898),
-                LatLng(23.740341307078115, 90.38882710039616),
+                LatLng(23.743868823619685, 90.38998179137707),
+                LatLng(23.74330996382975, 90.3886155411601),
+                LatLng(23.741055472697827, 90.38797348737717),
+                //LatLng(23.740341307078115, 90.38882710039616), // closing with first
               ]
           )
         },
         polygons: {
           Polygon(
-              polygonId: const PolygonId('random-id'),
-              fillColor: Colors.orange.withOpacity(0.4),
+              polygonId: const PolygonId('my-polygonId'),
+              fillColor: Colors.orange.withOpacity(0.1),
               strokeColor: Colors.orange,
-              strokeWidth: 3,
+              strokeWidth: 2,
               holes: const [], // TODO: explore it by yourself <-----
               points: const [
-                LatLng(23.739841971936272, 90.3895965591073),
-                LatLng(23.73569345718147, 90.38991339504719),
-                LatLng(23.737665990064247, 90.39202865213156),
-                LatLng(23.739380384460528, 90.38338992744684),
-                LatLng(23.736511078293713, 90.38516487926245)
+                LatLng(23.740224069374076, 90.3841932490468),
+                LatLng(23.739797470555377, 90.38689322769642),
+                LatLng(23.743004600108883, 90.38830272853374),
+                LatLng(23.745184789315726, 90.38672659546137),
+                LatLng(23.74386084430952, 90.38525439798832),
               ]
           )
         },
