@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('google maps app'),),
       body: GoogleMap(
-        mapType: MapType.normal, // .satellite .hybrid .normal
+        mapType: MapType.normal, // .satellite .hybrid .normal .terrain
         zoomControlsEnabled: true, // + - zoom in/out buttons
         zoomGesturesEnabled: true, //on tap zoom in
         myLocationEnabled: true,
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
         initialCameraPosition: const CameraPosition(
           target: LatLng(23.742144667472623, 90.38969244807959), // Latitude Longitude
           zoom: 15, // the more zoom, the closer to target location, 16-17 more commonly used.
-          bearing: 5, // rotate clockwise in degree, A bearing of 0.0, the default, means the camera points north.
+          bearing: 1, // rotate clockwise in degree, A bearing of 0.0, the default, means the camera points north.
           tilt: 0,
         ),
         onTap: (LatLng latLng) {
