@@ -4,6 +4,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+// to do : user set a marker
+// holes in polygon, draw 'A' in map
+// implement open street map
+
 void main(){runApp(const MyApp()); }
 
 class MyApp extends StatelessWidget {
@@ -31,9 +35,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  Future<void> _initializeMapSomething() async {
+  Future<void> _doSomething() async {
     print("_mapController.getVisibleRegion() = ");
     print(await _mapController.getVisibleRegion()); // LatLngBounds(LatLng(-41.69584836329773, 55.62881715595722), LatLng(67.13937965531485, 127.95026052743196))
+    // _mapController. // functions
   }
 
   @override
@@ -50,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // liteModeEnabled: false,
         onMapCreated: (GoogleMapController controller) {
           _mapController = controller;
-          _initializeMapSomething();
+          _doSomething();
         },
         initialCameraPosition: const CameraPosition(
           target: LatLng(23.742144667472623, 90.38969244807959), // Latitude Longitude
@@ -65,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
           print('on Long press : $latLng');
         },
         markers: {
-          Marker(
+          Marker( // how user can set a Marker ? <-----------------------------------
               markerId: const MarkerId('my-new-restaurant'),
               position: const LatLng(23.742443588311794, 90.3894929587841),
               infoWindow: const InfoWindow(title: 'my new restaurant'),
