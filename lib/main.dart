@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fillColor: Colors.orange.withOpacity(0.1),
               strokeColor: Colors.orange,
               strokeWidth: 2,
-              holes: const [], // TODO: explore it by yourself <-----
+              holes: const [], // TO DO: explore it yourself <-----
               points: const [
                 LatLng(23.740224069374076, 90.3841932490468),
                 LatLng(23.739797470555377, 90.38689322769642),
