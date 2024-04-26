@@ -1,6 +1,7 @@
 // google maps
 // add, https://github.com/RafatMeraz/ostad_flutter_batch_five/tree/module-21-class-2/live_class_project
 
+import 'package:app3_google_maps/geolocator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -27,7 +28,7 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
+// clas 3, Geo location, 13:00
 class _HomeScreenState extends State<HomeScreen> {
   late GoogleMapController _mapController;
   @override
@@ -40,6 +41,17 @@ class _HomeScreenState extends State<HomeScreen> {
     print(await _mapController.getVisibleRegion()); // LatLngBounds(LatLng(-41.69584836329773, 55.62881715595722), LatLng(67.13937965531485, 127.95026052743196))
     // _mapController. // functions
   }
+
+  List<LatLng> latLngList =
+   [
+    const LatLng(23.740341307078115, 90.38882710039616),
+    const LatLng(23.740324734215356, 90.39145734161139),
+    const LatLng(23.742737598077895, 90.39118140935898),
+    const LatLng(23.743868823619685, 90.38998179137707),
+    const LatLng(23.74330996382975, 90.3886155411601),
+    const LatLng(23.741055472697827, 90.38797348737717),
+    //LatLng(23.740341307078115, 90.38882710039616), // closing with first
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
               draggable: true,
               flat: false, //true
+            //onTap: (){}
           ),
           Marker(
               markerId: const MarkerId('my-new-club'),
@@ -96,7 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         },
         circles: {
-          //class 2, 42:30
           Circle(
               circleId: const CircleId('my-new-circle-1'),
               center: const LatLng(23.742443588311794, 90.3894929587841),
@@ -119,19 +131,20 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         },
         polylines: {
-          const Polyline(
+          Polyline(
               polylineId: PolylineId('poly-one'),
               color: Colors.green,
               width: 3,
-              points: [
-                LatLng(23.740341307078115, 90.38882710039616),
-                LatLng(23.740324734215356, 90.39145734161139),
-                LatLng(23.742737598077895, 90.39118140935898),
-                LatLng(23.743868823619685, 90.38998179137707),
-                LatLng(23.74330996382975, 90.3886155411601),
-                LatLng(23.741055472697827, 90.38797348737717),
-                //LatLng(23.740341307078115, 90.38882710039616), // closing with first
-              ]
+              points: latLngList,
+              // [
+              //   LatLng(23.740341307078115, 90.38882710039616),
+              //   LatLng(23.740324734215356, 90.39145734161139),
+              //   LatLng(23.742737598077895, 90.39118140935898),
+              //   LatLng(23.743868823619685, 90.38998179137707),
+              //   LatLng(23.74330996382975, 90.3886155411601),
+              //   LatLng(23.741055472697827, 90.38797348737717),
+              //   //LatLng(23.740341307078115, 90.38882710039616), // closing with first
+              // ],
           )
         },
         polygons: {
