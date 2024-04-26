@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart'; // <---
 
-class GeoLocatorScreen extends StatefulWidget {
-  const GeoLocatorScreen({super.key});
+class GeolocatorScreen extends StatefulWidget {
+  const GeolocatorScreen({super.key});
 
   @override
-  State<GeoLocatorScreen> createState() => _GeoLocatorScreenState();
+  State<GeolocatorScreen> createState() => _GeolocatorScreenState();
 }
 
-class _GeoLocatorScreenState extends State<GeoLocatorScreen> {
+class _GeolocatorScreenState extends State<GeolocatorScreen> {
   Position? position;
   @override
   void initState() {
@@ -31,6 +31,7 @@ class _GeoLocatorScreenState extends State<GeoLocatorScreen> {
     LocationPermission permission = await Geolocator.checkPermission();
     if(permission==LocationPermission.whileInUse || permission==LocationPermission.always){
       position = await Geolocator.getCurrentPosition();
+
       print(position); // Latitude: 37.4219983, Longitude: -122.084 // Dhaka/Coordinates:  23.8041° N, 90.4152° E -----------
     }else{
       LocationPermission requestStatus = await Geolocator.requestPermission();
@@ -51,7 +52,7 @@ class _GeoLocatorScreenState extends State<GeoLocatorScreen> {
         //timeLimit: Duration(seconds: 3),
       )
     ).listen((p){
-      print(p);
+      print(p); // p.latitude, p.longitude ?
     });
   }
 

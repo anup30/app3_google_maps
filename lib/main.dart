@@ -3,7 +3,7 @@
 
 import 'package:app3_google_maps/geolocator_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart'; // <---
 
 // to do : user set a marker
 // holes in polygon, draw 'A' in map
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: HomeScreen(),
+      home: GeolocatorScreen(),
     );
   }
 }
