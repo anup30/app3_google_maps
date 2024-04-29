@@ -29,16 +29,16 @@ class _GeolocatorScreenState extends State<GeolocatorScreen> {
     });
   }
 
-  Future<void> _onScreenStart()async{ //---------------------------------------- once
+  Future<void> _onScreenStart()async{
     bool isEnabled = await Geolocator.isLocationServiceEnabled();
     print("isEnabled = $isEnabled");
     //print(await Geolocator.getLastKnownPosition());
     LocationPermission permission = await Geolocator.checkPermission();
     if(permission==LocationPermission.whileInUse || permission==LocationPermission.always){
       initialPosition = await Geolocator.getCurrentPosition();
-      latLngList.add(LatLng(initialPosition!.latitude, initialPosition!.longitude)); // --------------------------
+      latLngList.add(LatLng(initialPosition!.latitude, initialPosition!.longitude));
       currentPosition = initialPosition;
-      print("initialPosition = $initialPosition"); // @patenga: Latitude: 22.2429317, Longitude: 91.7874833 // Dhaka/Coordinates:  23.8041° N, 90.4152° E -----------
+      print("initialPosition = $initialPosition");
     }else{
       LocationPermission requestStatus = await Geolocator.requestPermission();
       if(requestStatus==LocationPermission.whileInUse || requestStatus==LocationPermission.always){
@@ -53,21 +53,24 @@ class _GeolocatorScreenState extends State<GeolocatorScreen> {
 
   Future<void> _setCurrentPosition()async{
     currentPosition = await Geolocator.getCurrentPosition();
-    latLngList.add(LatLng(currentPosition!.latitude, currentPosition!.longitude)); // --------------------------
+    latLngList.add(LatLng(currentPosition!.latitude, currentPosition!.longitude));
     print("currentPosition,${++count}  = $currentPosition");
     setState(() {});
-    // I/flutter ( 5878): currentPosition,1  = Latitude: 22.2429317, Longitude: 91.7874833
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('geolocator'),backgroundColor: Colors.blue,),
-      body: initialPosition==null? const Center(child: CircularProgressIndicator(),):GoogleMap(
+      appBar: AppBar(
+        title: const Text('Real-Time Location Tracker',
+          style: TextStyle(color: Colors.white),),backgroundColor: Colors.blue,),
+      body: initialPosition==null?
+      const Center(child: CircularProgressIndicator(),):
+      GoogleMap(
         initialCameraPosition: CameraPosition(
-          target: LatLng(initialPosition!.latitude,initialPosition!.longitude), //LatLng(23.742144667472623, 90.38969244807959), // Latitude Longitude
-          zoom: 17, // the more zoom, the closer to target location, 16-17 more commonly used.
-          bearing: 0, // rotate clockwise in degree, A bearing of 0.0, the default, means the camera points north.
+          target: LatLng(initialPosition!.latitude,initialPosition!.longitude),
+          zoom: 17,
+          bearing: 0,
           tilt: 0,
         ),
         mapType: MapType.normal, // .satellite .hybrid .normal .terrain
@@ -150,53 +153,3 @@ class _GeolocatorScreenState extends State<GeolocatorScreen> {
     );
   }
 }
-
-/*
-  class 3, at 35:00, 54:30
- add geolocator: ^11.0.0 to pubspec dependencies
- // GPS service enabled ?
- // App permission enabled ?
- // geolocation - get location once
- // listen location - continuous
-
-* */
-// currentPosition,1  = Latitude: 22.2429317, Longitude: 91.7874833
-//currentPosition,27  = Latitude: 22.234705, Longitude: 91.79336
-
-
-// void _listenCurrentLocation(){ // ------------------------------------------------- stream
-//   try{
-//     Geolocator.getPositionStream(
-//         locationSettings: const LocationSettings(
-//           accuracy: LocationAccuracy.best, // .best .bestForNavigation
-//           //distanceFilter: 5,
-//           timeLimit: Duration(seconds: 5),
-//           /*LocationSettings.timeLimit: allows for setting a timeout interval.
-//       * If between fetching locations the timeout interval is exceeded a TimeoutException will be thrown.
-//       * By default no time limit is configured.*/
-//         )
-//     ).listen((p){
-//       //print(p); // p.latitude, p.longitude ?
-//       currentPosition = p;
-//       print("currentPosition,${count++} = $currentPosition");
-//       if(currentPosition==initialPosition){
-//         print("currentPosition==initialPosition ----------------------------------------");
-//       }
-//       //positionStream.cancel();
-//     });
-//   }catch(e){
-//     print("error occurred: $e");
-//     count =-500;
-//     _listenCurrentLocation();
-//   }
-// }
-
-
-//Future<void> _onScreenStart()async{ //------------------------------------------------- once
-  // LocationPermission permission = await Geolocator.checkPermission();
-  // print("permission = $permission"); // permission = LocationPermission.denied
-  // LocationPermission requestStatus = await Geolocator.requestPermission();
-  // if(requestStatus==LocationPermission.whileInUse || requestStatus==LocationPermission.always){
-  //   Position position = await Geolocator.getCurrentPosition();
-  //   print(position); // Latitude: 37.4219983, Longitude: -122.084 ---------------------------------
-// }
