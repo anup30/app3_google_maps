@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart'; // <---
 
-class GeolocatorScreen extends StatefulWidget {
-  const GeolocatorScreen({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<GeolocatorScreen> createState() => _GeolocatorScreenState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _GeolocatorScreenState extends State<GeolocatorScreen> {
+class _HomePageState extends State<HomePage> {
   Position? initialPosition; //= Latlng( 37.4219983, -122.084);
   Position? currentPosition;
   List<LatLng> latLngList = []; // for Polyline
@@ -23,9 +23,7 @@ class _GeolocatorScreenState extends State<GeolocatorScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _onScreenStart();
-      Timer.periodic(const Duration(seconds: 10), (_) {
-        _setCurrentPosition();
-      });
+      _listenCurrentLocation();
     });
   }
 
@@ -50,20 +48,30 @@ class _GeolocatorScreenState extends State<GeolocatorScreen> {
     setState(() {});
   }
 
+  void _listenCurrentLocation() { //-------------------------------------------------- stream
+    Geolocator.getPositionStream(locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.best,
+      //distanceFilter: 1,
+      timeLimit: Duration(seconds: 10),
+    )).listen((p) {
+      //print(p);
+      currentPosition =p;
+      print("currentPosition = $currentPosition");
+      latLngList.add(LatLng(currentPosition!.latitude, currentPosition!.longitude));
+      setState(() {});
+    });
+  }
 
-  Future<void> _setCurrentPosition()async{
-    currentPosition = await Geolocator.getCurrentPosition();
-    latLngList.add(LatLng(currentPosition!.latitude, currentPosition!.longitude)); // --------------------------
-    print("currentPosition,${++count}  = $currentPosition");
-    setState(() {});
-    // I/flutter ( 5878): currentPosition,1  = Latitude: 22.2429317, Longitude: 91.7874833
+  Future<void> _doSomething() async {
+    print("_mapController.getVisibleRegion() = ");
+    print(await _mapController.getVisibleRegion()); // LatLngBounds(LatLng(-41.69584836329773, 55.62881715595722), LatLng(67.13937965531485, 127.95026052743196))
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('geolocator'),backgroundColor: Colors.blue,),
-      body: initialPosition==null? const Center(child: CircularProgressIndicator(),):GoogleMap(
+      body: GoogleMap(
         initialCameraPosition: CameraPosition(
           target: LatLng(initialPosition!.latitude,initialPosition!.longitude), //LatLng(23.742144667472623, 90.38969244807959), // Latitude Longitude
           zoom: 17, // the more zoom, the closer to target location, 16-17 more commonly used.
@@ -78,25 +86,20 @@ class _GeolocatorScreenState extends State<GeolocatorScreen> {
         compassEnabled: true,
         onMapCreated: (GoogleMapController controller) {
           _mapController = controller;
+          _doSomething();
         },
         markers: {
           Marker(
-            markerId: const MarkerId('initial-position'),
-            position: LatLng(initialPosition!.latitude, initialPosition!.longitude),
-            infoWindow: const InfoWindow(title: 'my initial position'),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-            onTap: (){
-              _showAlertDialog('Initial Location Info', initialPosition!);
-            }
+              markerId: const MarkerId('initial-position'),
+              position: LatLng(initialPosition!.latitude, initialPosition!.longitude),
+              infoWindow: const InfoWindow(title: 'my initial position'),
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
           ),
           Marker(
-            markerId: const MarkerId('current-position'),
-            position: LatLng(currentPosition!.latitude, currentPosition!.longitude),
-            infoWindow: const InfoWindow(title: 'my current position'),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-              onTap: (){
-                _showAlertDialog('Current Location Info', currentPosition!);
-              }
+              markerId: const MarkerId('current-position'),
+              position: LatLng(currentPosition!.latitude, currentPosition!.longitude),
+              infoWindow: const InfoWindow(title: 'my current position'),
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           ),
         },
         polylines: {
@@ -108,45 +111,6 @@ class _GeolocatorScreenState extends State<GeolocatorScreen> {
           )
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          _mapController.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target:
-                  LatLng(currentPosition!.latitude, currentPosition!.longitude),
-              zoom: 17,
-            ),
-          ));
-        },
-        backgroundColor: Colors.blue.withOpacity(0.5),
-        tooltip: "animate to current location",
-        child: const Icon(Icons.animation),
-      ),
-    );
-  }
-  void _showAlertDialog(String text, Position position) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(text),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Text('Latitude: ${position.latitude}'),
-                Text('Longitude: ${position.longitude}'),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {Navigator.pop(context);},
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
@@ -193,10 +157,10 @@ class _GeolocatorScreenState extends State<GeolocatorScreen> {
 
 
 //Future<void> _onScreenStart()async{ //------------------------------------------------- once
-  // LocationPermission permission = await Geolocator.checkPermission();
-  // print("permission = $permission"); // permission = LocationPermission.denied
-  // LocationPermission requestStatus = await Geolocator.requestPermission();
-  // if(requestStatus==LocationPermission.whileInUse || requestStatus==LocationPermission.always){
-  //   Position position = await Geolocator.getCurrentPosition();
-  //   print(position); // Latitude: 37.4219983, Longitude: -122.084 ---------------------------------
+// LocationPermission permission = await Geolocator.checkPermission();
+// print("permission = $permission"); // permission = LocationPermission.denied
+// LocationPermission requestStatus = await Geolocator.requestPermission();
+// if(requestStatus==LocationPermission.whileInUse || requestStatus==LocationPermission.always){
+//   Position position = await Geolocator.getCurrentPosition();
+//   print(position); // Latitude: 37.4219983, Longitude: -122.084 ---------------------------------
 // }
