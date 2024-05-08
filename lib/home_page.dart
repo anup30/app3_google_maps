@@ -1,8 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart'; // <---
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,16 +25,16 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> _onScreenStart()async{ //---------------------------------------- once
+  Future<void> _onScreenStart()async{
     bool isEnabled = await Geolocator.isLocationServiceEnabled();
     print("isEnabled = $isEnabled");
     //print(await Geolocator.getLastKnownPosition());
     LocationPermission permission = await Geolocator.checkPermission();
     if(permission==LocationPermission.whileInUse || permission==LocationPermission.always){
       initialPosition = await Geolocator.getCurrentPosition();
-      latLngList.add(LatLng(initialPosition!.latitude, initialPosition!.longitude)); // --------------------------
+      latLngList.add(LatLng(initialPosition!.latitude, initialPosition!.longitude));
       currentPosition = initialPosition;
-      print("initialPosition = $initialPosition"); // @patenga: Latitude: 22.2429317, Longitude: 91.7874833 // Dhaka/Coordinates:  23.8041° N, 90.4152° E -----------
+      print("initialPosition = $initialPosition");
     }else{
       LocationPermission requestStatus = await Geolocator.requestPermission();
       if(requestStatus==LocationPermission.whileInUse || requestStatus==LocationPermission.always){
@@ -48,7 +46,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  void _listenCurrentLocation() { //-------------------------------------------------- stream
+  void _listenCurrentLocation() { // stream
     Geolocator.getPositionStream(locationSettings: const LocationSettings(
       accuracy: LocationAccuracy.best,
       //distanceFilter: 1,
@@ -64,7 +62,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _doSomething() async {
     print("_mapController.getVisibleRegion() = ");
-    print(await _mapController.getVisibleRegion()); // LatLngBounds(LatLng(-41.69584836329773, 55.62881715595722), LatLng(67.13937965531485, 127.95026052743196))
+    print(await _mapController.getVisibleRegion());
   }
 
   @override
